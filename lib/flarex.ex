@@ -1,6 +1,8 @@
 defmodule Flarex do
   @moduledoc """
   Documentation for `Flarex`.
+
+  A flash message clearing package for Phoenix.
   """
 alias Flarex.ProcessStore
 
