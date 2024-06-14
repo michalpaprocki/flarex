@@ -1,4 +1,4 @@
-defmodule Flarex.ProcessStore do
+defmodule LightsOut.ProcessStore do
 
   use GenServer
 @moduledoc """
@@ -24,13 +24,13 @@ defmodule Flarex.ProcessStore do
 
     ## Examples
 
-        Flarex.ProcessStore.add_ref(exisiting_pid, ref)
+        LightsOut.ProcessStore.add_ref(exisiting_pid, ref)
         true
 
-        Flarex.ProcessStor.add_ref("not_a_valid_pid" ref)
+        LightsOut.ProcessStor.add_ref("not_a_valid_pid" ref)
         true
 
-        Flarex.ProcessStor.add_ref(self(), :not_a_valid_ref)
+        LightsOut.ProcessStor.add_ref(self(), :not_a_valid_ref)
         true
 
   """
@@ -42,9 +42,9 @@ defmodule Flarex.ProcessStore do
 
     ## Examples
 
-        Flarex.ProcessStor.get_ref(existing_pid)
+        LightsOut.ProcessStor.get_ref(existing_pid)
         [[ref]]
-        Flarex.ProcessStor.get_ref(non-existent_pid)
+        LightsOut.ProcessStor.get_ref(non-existent_pid)
         []
 
   """

@@ -1,16 +1,16 @@
-defmodule Flarex do
+defmodule LightsOut do
   @moduledoc """
-  Documentation for `Flarex`.
+  Documentation for `LightsOut`.
 
   A flash message clearing package for Phoenix.
   """
-alias Flarex.ProcessStore
+alias LightsOut.ProcessStore
 
   @doc """
     Sends a msg `:clear_flash` to `pid` after `timeout`.
     Calling the function again with the same `pid` before the previous `timeout` has run out, will override the call.
 
-    The message sent has to be handled in the module calling `Flarex.clear_after/2` with `handle_info/2`.
+    The message sent has to be handled in the module calling `LightsOut.clear_after/2` with `handle_info/2`.
 
       ## Example
 
@@ -22,12 +22,12 @@ alias Flarex.ProcessStore
             end
 
             def handle_event("click", _params, socket) do
-              Flarex.clear_after(self(), 5000)
+              LightsOut.clear_after(self(), 5000)
               {:noreply, socket |> put_flash(:info, "You clicked!")}
             end
 
             def handle_info(:clear_flash, socket) do
-                Flarex.clean_up_ref(self())
+                LightsOut.clean_up_ref(self())
               {:noreply, socket |> clear_flash()}
             end
           end
@@ -51,7 +51,7 @@ alias Flarex.ProcessStore
   end
 @doc """
     Useful after `put_flash/3` and `push_navigate/2` combo.
-    Checks whether socket contains a map of flashes with `:error` and `:info` keys. If yes, it runs `Flarex.clear_after/2`.
+    Checks whether socket contains a map of flashes with `:error` and `:info` keys. If yes, it runs `LightsOut.clear_after/2`.
 
       ## Example
 
@@ -69,12 +69,12 @@ alias Flarex.ProcessStore
           MyApp.HomeLive
 
             def mount(_params, _session, socket) do
-                Flarex.clear_after_redirect(socket, self(), 5000)
+                LightsOut.clear_after_redirect(socket, self(), 5000)
               {:ok, socket}
             end
 
             def handle_info(:clear_flash, socket) do
-                Flarex.clean_up_ref(self())
+                LightsOut.clean_up_ref(self())
               {:noreply, socket |> clear_flash()}
             end
           end
@@ -94,7 +94,7 @@ alias Flarex.ProcessStore
       ## Examples
 
           def handle_info(:clear_flash, socket) do
-              Flarex.clean_up_ref(self())
+              LightsOut.clean_up_ref(self())
             {:noreply, socket |> clear_flash()}
           end
   """

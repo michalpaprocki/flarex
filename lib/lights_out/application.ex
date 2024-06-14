@@ -1,4 +1,4 @@
-defmodule Flarex.Application do
+defmodule LightsOut.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
@@ -8,14 +8,14 @@ defmodule Flarex.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # Starts a worker by calling: Flarex.Worker.start_link(arg)
-      # {Flarex.Worker, arg}
-      Flarex.ProcessStore
+      # Starts a worker by calling: LightsOut.Worker.start_link(arg)
+      # {LightsOut.Worker, arg}
+      LightsOut.ProcessStore
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: Flarex.Supervisor]
+    opts = [strategy: :one_for_one, name: LightsOut.Supervisor]
     Supervisor.start_link(children, opts)
   end
 end
