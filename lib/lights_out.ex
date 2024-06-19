@@ -120,12 +120,8 @@ end
             {:noreply, socket |> clear_flash()}
           end
   """
-  defp clean_up_ref(pid) do
+  def clean_up_ref(pid) do
     ProcessStore.delete_ref(pid)
   end
 
-  def handle_info(:clear_flash, socket) do
-    clean_up_ref(self())
-    {:noreply, socket |> clear_flash()}
-  end
 end
