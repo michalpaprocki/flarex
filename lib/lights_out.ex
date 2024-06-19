@@ -1,4 +1,5 @@
 defmodule LightsOut do
+  import Phoenix.LiveView.Utils, only: [put_flash: 3, clear_flash: 1]
   @moduledoc """
   Documentation for `LightsOut`.
 
@@ -7,6 +8,7 @@ defmodule LightsOut do
 alias LightsOut.ProcessStore
 
   @doc """
+    Puts `key` and `message` into Phoenix.LiveView.Utils.put_flash/3 function.
     Sends a msg `:clear_flash` to `pid` after `timeout`.
     Calling the function again with the same `pid` before the previous `timeout` has run out, will override the call.
 
@@ -32,21 +34,41 @@ alias LightsOut.ProcessStore
             end
           end
   """
-  def clear_after(pid, timeout) when is_pid(pid) and is_integer(timeout) do
+  def flash_and_clear_after(socket = %Phoenix.LiveView.Socket{}, key, message, pid, timeout) when is_pid(pid) and is_integer(timeout) and is_atom(key) do
     retrieved_ref = ProcessStore.get_ref(pid)
       case length(retrieved_ref) do
         0->
         ref = Process.send_after(pid, :clear_flash, timeout)
         ProcessStore.add_ref(pid, ref)
+        socket |> put_flash(key, message)
+
       _->
         ProcessStore.delete_ref(pid)
         Process.cancel_timer(hd(hd(retrieved_ref)))
         ref = Process.send_after(pid, :clear_flash, timeout)
         ProcessStore.add_ref(pid, ref)
+        socket |> put_flash(key, message)
       end
   end
+  def flash_and_clear_after(_socket, _flash_type, _message,  _pid, _timeout) do
+    raise("Bad args")
+  end
 
-  def clear_after(_pid, _timeout) do
+  def clear_after(%Phoenix.LiveView.Socket{}, pid, timeout) when is_pid(pid) and is_integer(timeout) do
+    retrieved_ref = ProcessStore.get_ref(pid)
+    case length(retrieved_ref) do
+      0->
+      ref = Process.send_after(pid, :clear_flash, timeout)
+      ProcessStore.add_ref(pid, ref)
+    _->
+      ProcessStore.delete_ref(pid)
+      Process.cancel_timer(hd(hd(retrieved_ref)))
+      ref = Process.send_after(pid, :clear_flash, timeout)
+      ProcessStore.add_ref(pid, ref)
+    end
+end
+
+  def clear_after(_socket, _pid, _timeout) do
     raise("Bad args")
   end
 @doc """
@@ -79,9 +101,9 @@ alias LightsOut.ProcessStore
             end
           end
   """
-  def clear_after_redirect(socket, pid, timeout) when is_pid(pid) and is_integer(timeout) do
-    if Map.has_key?(socket.assigns.flash, "error") || Map.has_key?(socket.assigns.flash, "info") do
-      clear_after(pid, timeout)
+  def clear_after_redirect(socket= %Phoenix.LiveView.Socket{}, pid, timeout) when is_pid(pid) and is_integer(timeout) do
+    if length(Map.to_list(socket.assigns.flash)) > 0 do
+      clear_after(socket, pid, timeout)
     end
   end
 
@@ -98,7 +120,12 @@ alias LightsOut.ProcessStore
             {:noreply, socket |> clear_flash()}
           end
   """
-  def clean_up_ref(pid) do
+  defp clean_up_ref(pid) do
     ProcessStore.delete_ref(pid)
+  end
+
+  def handle_info(:clear_flash, socket) do
+    clean_up_ref(self())
+    {:noreply, socket |> clear_flash()}
   end
 end

@@ -1,6 +1,6 @@
 {application,lights_out,
     [{optional_applications,[]},
-     {applications,[kernel,stdlib,elixir,logger]},
+     {applications,[kernel,stdlib,elixir,logger,phoenix_live_view]},
      {description,"lights_out"},
      {modules,
          ['Elixir.LightsOut','Elixir.LightsOut.Application',
