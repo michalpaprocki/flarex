@@ -3,7 +3,7 @@
 Simple genserver wrapper of an :ets table, that keeps track of started references spawned by the Process.send_after/4 fn.
 
 
-![example_flash_cleaner](https://github.com/michalpaprocki/live_view_flash_cleaner/img/example_flash_cleaner.gif)
+![example_flash_cleaner](https://github.com/michalpaprocki/live_view_flash_cleaner/blob/main/img/example_flash_cleaner.gif)
 
 
 
