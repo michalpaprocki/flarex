@@ -1,17 +1,17 @@
-defmodule LightsOut.MixProject do
+defmodule LiveViewFlashCleaner.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :lights_out,
+      app: :live_view_flash_cleaner,
       version: "0.1.0",
       elixir: "~> 1.16",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: [
-        description: "A flash message clearing package for Phoenix.",
+        description: "A flash message cleaning package for Phoenix.",
         licenses: ["MIT"],
-        links: %{"github" => "https://github.com/michalpaprocki/lights_out"}]
+        links: %{"github" => "https://github.com/michalpaprocki/live_view_flash_cleaner"}]
     ]
   end
 
@@ -19,7 +19,7 @@ defmodule LightsOut.MixProject do
   def application do
     [
       extra_applications: [:logger],
-      mod: {LightsOut.Application, [strategy: :one_for_one, name: LightsOut.Supervisor]}
+      mod: {LiveViewFlashCleaner.Application, [strategy: :one_for_one, name: LiveViewFlashCleaner.Supervisor]}
     ]
   end
 

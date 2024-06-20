@@ -1,4 +1,4 @@
-defmodule LightsOut.ProcessStore do
+defmodule LiveViewFlashCleaner.ProcessStore do
 
   use GenServer
 @moduledoc """
@@ -24,13 +24,13 @@ defmodule LightsOut.ProcessStore do
 
     ## Examples
 
-        LightsOut.ProcessStore.add_ref(exisiting_pid, ref)
+        LiveViewFlashCleaner.ProcessStoree.add_ref(exisiting_pid, ref)
         true
 
-        LightsOut.ProcessStor.add_ref("not_a_valid_pid" ref)
+        LiveViewFlashCleaner.ProcessStore.add_ref("not_a_valid_pid" ref)
         true
 
-        LightsOut.ProcessStor.add_ref(self(), :not_a_valid_ref)
+        LiveViewFlashCleaner.ProcessStore.add_ref(self(), :not_a_valid_ref)
         true
 
   """
@@ -42,9 +42,9 @@ defmodule LightsOut.ProcessStore do
 
     ## Examples
 
-        LightsOut.ProcessStor.get_ref(existing_pid)
+        LiveViewFlashCleaner.ProcessStore.get_ref(existing_pid)
         [[ref]]
-        LightsOut.ProcessStor.get_ref(non-existent_pid)
+        LiveViewFlashCleaner.ProcessStore.get_ref(non-existent_pid)
         []
 
   """
@@ -56,9 +56,9 @@ defmodule LightsOut.ProcessStore do
 
     ## Examples
 
-        ClearFlasg.ProcessStor.delete_ref(existing_pid)
+        LiveViewFlashCleaner.ProcessStore.delete_ref(existing_pid)
         true
-        ClearFlasg.ProcessStor.delete_ref(non-existent_pid)
+        LiveViewFlashCleaner.ProcessStore.delete_ref(non-existent_pid)
         true
 
   """

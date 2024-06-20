@@ -1,7 +1,7 @@
-defmodule LightsOutTest do
-  alias LightsOut.ProcessStore
+defmodule LiveViewFlashCleanerTest do
+  alias LiveViewFlashCleaner.ProcessStore
   use ExUnit.Case
-  doctest LightsOut
+  doctest LiveViewFlashCleaner
 
     test "pings a genserver" do
       assert ProcessStore.ping() == :pong

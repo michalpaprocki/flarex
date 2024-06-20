@@ -1,35 +1,36 @@
-defmodule LightsOut do
-  import Phoenix.LiveView.Utils, only: [put_flash: 3, clear_flash: 1]
+defmodule LiveViewFlashCleaner do
+  import Phoenix.LiveView.Utils, only: [put_flash: 3]
   @moduledoc """
-  Documentation for `LightsOut`.
+  Documentation for `LiveViewFlashCleaner`.
 
   A flash message clearing package for Phoenix.
   """
-alias LightsOut.ProcessStore
+alias LiveViewFlashCleaner.ProcessStore
 
   @doc """
     Puts `key` and `message` into Phoenix.LiveView.Utils.put_flash/3 function.
     Sends a msg `:clear_flash` to `pid` after `timeout`.
     Calling the function again with the same `pid` before the previous `timeout` has run out, will override the call.
 
-    The message sent has to be handled in the module calling `LightsOut.clear_after/2` with `handle_info/2`.
+    The message sent has to be handled in the module calling `LiveViewFlashCleaner.flash_and_clear_after/5` with `handle_info/2`.
 
       ## Example
 
           MyApp.HomeLive
-
+          import LiveViewFlashCleaner
             def mount(_params, _session, socket) do
 
               {:ok, socket}
             end
 
             def handle_event("click", _params, socket) do
-              LightsOut.clear_after(self(), 5000)
-              {:noreply, socket |> put_flash(:info, "You clicked!")}
+
+              {:noreply, socket |> flash_and_clear_after(:info, "You clicked!", self(), 5000)}
             end
 
             def handle_info(:clear_flash, socket) do
-                LightsOut.clean_up_ref(self())
+
+              clean_up_ref(self())
               {:noreply, socket |> clear_flash()}
             end
           end
@@ -53,8 +54,33 @@ alias LightsOut.ProcessStore
   def flash_and_clear_after(_socket, _flash_type, _message,  _pid, _timeout) do
     raise("Bad args")
   end
+  @doc """
+  Sends a msg `:clear_flash` to `pid` after `timeout`.
+    Calling the function again with the same `pid` before the previous `timeout` has run out, will override the call.
 
-  def clear_after(%Phoenix.LiveView.Socket{}, pid, timeout) when is_pid(pid) and is_integer(timeout) do
+    The message sent has to be handled in the module calling `LiveViewFlashCleaner.clear_after/2` with `handle_info/2`.
+
+          MyApp.HomeLive
+          import LiveViewFlashCleaner
+            def mount(_params, _session, socket) do
+
+              {:ok, socket}
+            end
+
+            def handle_event("click", _params, socket) do
+
+                clear_after(self(), 5000)
+              {:noreply, socket |> put_flash(:info, "You clicked!"}
+            end
+
+            def handle_info(:clear_flash, socket) do
+
+              clean_up_ref(self())
+              {:noreply, socket |> clear_flash()}
+            end
+          end
+  """
+  def clear_after(pid, timeout) when is_pid(pid) and is_integer(timeout) do
     retrieved_ref = ProcessStore.get_ref(pid)
     case length(retrieved_ref) do
       0->
@@ -68,12 +94,12 @@ alias LightsOut.ProcessStore
     end
 end
 
-  def clear_after(_socket, _pid, _timeout) do
+  def clear_after(_pid, _timeout) do
     raise("Bad args")
   end
 @doc """
     Useful after `put_flash/3` and `push_navigate/2` combo.
-    Checks whether socket contains a map of flashes with `:error` and `:info` keys. If yes, it runs `LightsOut.clear_after/2`.
+    Checks whether socket contains a map of flashes` with any key present. If yes, it runs `LiveViewFlashCleaner.clear_after/2`.
 
       ## Example
 
@@ -89,21 +115,22 @@ end
           end
 
           MyApp.HomeLive
+          import LiveViewFlashCleaner
 
             def mount(_params, _session, socket) do
-                LightsOut.clear_after_redirect(socket, self(), 5000)
-              {:ok, socket}
+
+              {:ok, socket |> clear_after_redirect(self(), 5000)}
             end
 
             def handle_info(:clear_flash, socket) do
-                LightsOut.clean_up_ref(self())
+                LiveViewFlashCleaner.clean_up_ref(self())
               {:noreply, socket |> clear_flash()}
             end
           end
   """
   def clear_after_redirect(socket= %Phoenix.LiveView.Socket{}, pid, timeout) when is_pid(pid) and is_integer(timeout) do
     if length(Map.to_list(socket.assigns.flash)) > 0 do
-      clear_after(socket, pid, timeout)
+      clear_after(pid, timeout)
     end
   end
 
@@ -116,7 +143,7 @@ end
       ## Examples
 
           def handle_info(:clear_flash, socket) do
-              LightsOut.clean_up_ref(self())
+              LiveViewFlashCleaner.clean_up_ref(self())
             {:noreply, socket |> clear_flash()}
           end
   """

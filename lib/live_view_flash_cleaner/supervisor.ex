@@ -1,5 +1,5 @@
-defmodule LightsOut.Supervisor do
-  alias LightsOut.ProcessStore
+defmodule LiveViewFlashCleaner.Supervisor do
+  alias LiveViewFlashCleaner.ProcessStore
   use Supervisor
 
 

@@ -1,4 +1,4 @@
-defmodule LightsOut.Application do
+defmodule LiveViewFlashCleaner.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
@@ -8,14 +8,14 @@ defmodule LightsOut.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # Starts a worker by calling: LightsOut.Worker.start_link(arg)
-      # {LightsOut.Worker, arg}
-      LightsOut.ProcessStore
+      # Starts a worker by calling: LiveViewFlashCleaner.Worker.start_link(arg)
+      # {LiveViewFlashCleaner.Worker, arg}
+      LiveViewFlashCleaner.ProcessStore
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: LightsOut.Supervisor]
+    opts = [strategy: :one_for_one, name: LiveViewFlashCleaner.Supervisor]
     Supervisor.start_link(children, opts)
   end
 end
